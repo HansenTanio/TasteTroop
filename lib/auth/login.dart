@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/gestures.dart';
+import 'package:taste_troop/auth/auth.dart';
+import 'package:taste_troop/auth/register.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -9,11 +10,31 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  bool visibilityPass = false;
-  final _usernameController = TextEditingController();
+  Authentication _auth = Authentication();
+  final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  bool visibilityPass = false;
   final _passwordFocusNode = FocusNode();
-  final _formKey = GlobalKey<FormState>();
+
+  void _showEmptyFieldErrorDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Kolom Kosong'),
+          content: Text('Mohon isi kolom yang kosong'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,10 +46,9 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
       body: Container(
         width: MediaQuery.of(context).size.width,
-        child: Container(
-          padding: EdgeInsets.all(20.0),
-          child: Form(
-            key: _formKey,
+        padding: EdgeInsets.symmetric(horizontal: 20.0),
+        child: Center(
+          child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -42,23 +62,17 @@ class _LoginScreenState extends State<LoginScreen> {
                   )),
                 ),
                 TextFormField(
-                  controller: _usernameController,
+                  controller: _emailController,
                   decoration: InputDecoration(
-                    labelText: 'Email/Nama Pengguna',
+                    labelText: 'Email',
                     icon: Icon(
                       Icons.email,
                       color: Theme.of(context).iconTheme.color,
                     ),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(20),
                     ),
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your email';
-                    }
-                    return null;
-                  },
                 ),
                 SizedBox(height: 20),
                 TextFormField(
@@ -82,28 +96,20 @@ class _LoginScreenState extends State<LoginScreen> {
                       color: Theme.of(context).iconTheme.color,
                     ),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(20),
                     ),
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Mohon masukkan kata sandi';
-                    }
-                    return null;
-                  },
                 ),
                 SizedBox(height: 5),
                 Column(
                   children: [
                     Align(
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 35),
-                        child: TextButton(
-                            onPressed: () {}, child: Text("Lupa kata sandi")),
+                      alignment: Alignment.centerRight,
+                      child: TextButton(
+                        onPressed: () {},
+                        child: Text("Lupa kata sandi"),
                       ),
                     ),
-                    SizedBox(height: 20),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         minimumSize: Size(300, 50.0),
@@ -113,45 +119,48 @@ class _LoginScreenState extends State<LoginScreen> {
                           borderRadius: BorderRadius.circular(20.0),
                         ),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        if (_emailController.text == '' ||
+                            _passwordController.text == '') {
+                          _showEmptyFieldErrorDialog();
+                        } else {
+                          _auth.login(
+                            _emailController.text,
+                            _passwordController.text,
+                          );
+                        }
+                      },
                       child: Text('Masuk'),
                     ),
-                    SizedBox(height: 40),
-                    RichText(
-                      textAlign: TextAlign.center,
-                      text: TextSpan(
+                    Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          TextSpan(
-                            text: "Belum memiliki akun ? ",
+                          Text(
+                            "Belum memiliki akun ? ",
                             style: TextStyle(
                               color: Colors.grey,
                               fontSize: 16,
                               decoration: TextDecoration.none,
                             ),
                           ),
-                          TextSpan(
-                            text: 'Daftar',
-                            style: TextStyle(
-                              color:
-                                  Theme.of(context).textTheme.bodyText1!.color,
-                              fontSize: 16,
-                              decoration: TextDecoration.underline,
-                            ),
-                            recognizer: TapGestureRecognizer()..onTap = () {},
+                          TextButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => RegisterScreen(),
+                                  ));
+                            },
+                            child: Text("Daftar"),
                           ),
                         ],
                       ),
                     ),
-                    SizedBox(
-                      height: 30,
-                    ),
                     Divider(),
-                    SizedBox(
-                      height: 10,
-                    ),
                     Text('atau masuk dengan'),
                     SizedBox(
-                      height: 20,
+                      height: 10,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,

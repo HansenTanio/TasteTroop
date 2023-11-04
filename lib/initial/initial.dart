@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:taste_troop/auth/register.dart';
 import 'package:taste_troop/initial/components/button.dart';
-import 'package:taste_troop/login/login.dart';
+import 'package:taste_troop/auth/login.dart';
 
 class InitialScreen extends StatefulWidget {
   const InitialScreen({super.key});
@@ -90,7 +91,17 @@ class _InitialScreenState extends State<InitialScreen> {
                           );
                         },
                       ),
-                      MyButton(teks: "Daftar", fungsi: () {}),
+                      MyButton(
+                        teks: "Daftar",
+                        fungsi: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => RegisterScreen(),
+                            ),
+                          );
+                        },
+                      ),
                     ],
                   ),
                   SizedBox(
