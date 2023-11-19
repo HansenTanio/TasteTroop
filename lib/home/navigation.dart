@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:taste_troop/home/berlangganan.dart';
 import 'package:taste_troop/home/home.dart';
+import 'package:taste_troop/home/profile.dart';
+import 'package:taste_troop/home/referensi.dart';
 
 class navigationScreen extends StatefulWidget {
   const navigationScreen({super.key});
@@ -58,19 +61,15 @@ class _navigationScreenState extends State<navigationScreen> {
         children: [
           Container(
             child: HomeScreen(),
-            // child: Text("Home"),
           ),
           Container(
-            // child: BerlanggananPage(),
-            child: Text("Berlangganan"),
+            child: BerlanggananScreen(),
           ),
           Container(
-            // child: MasakanRandomPage(),
-            child: Text("Random"),
+            child: ReferensiScreen(),
           ),
           Container(
-            // child: ProfilePage(),
-            child: Text("Profile"),
+            child: ProfileScreen(),
           ),
         ],
       ),
