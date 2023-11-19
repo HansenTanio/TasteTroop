@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:taste_troop/auth/auth.dart';
 import 'package:taste_troop/auth/components/button.dart';
 import 'package:taste_troop/auth/register.dart';
-import 'package:taste_troop/home/home.dart';
+import 'package:taste_troop/home/navigation.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -38,7 +38,7 @@ class _LoginScreenState extends State<LoginScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => HomeScreen(),
+            builder: (context) => navigationScreen(),
           ),
         );
         return true;
