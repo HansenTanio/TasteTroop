@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:taste_troop/auth/auth.dart';
+import 'package:taste_troop/auth/components/button.dart';
 import 'package:taste_troop/auth/register.dart';
+import 'package:taste_troop/home/home.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -11,29 +13,40 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   Authentication _auth = Authentication();
+  bool visibilityPass = false;
+  bool _validateEmail = false;
+  bool _validatePass = false;
+  final _passwordFocusNode = FocusNode();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  bool visibilityPass = false;
-  final _passwordFocusNode = FocusNode();
 
-  void _showEmptyFieldErrorDialog() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Kolom Kosong'),
-          content: Text('Mohon isi kolom yang kosong'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text('OK'),
-            ),
-          ],
+  Future<bool> _login(
+      TextEditingController email, TextEditingController pass) async {
+    setState(() {
+      _validateEmail = email.text.isEmpty;
+      if (_passwordController.text.length < 10) {
+        _validatePass = true;
+      } else {
+        _validatePass = false;
+      }
+    });
+    if (_validateEmail == false && _validatePass == false) {
+      if (await _auth.login(
+        _emailController.text,
+        _passwordController.text,
+      )) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomeScreen(),
+          ),
         );
-      },
-    );
+        return true;
+      }
+      return false;
+    } else {
+      return false;
+    }
   }
 
   @override
@@ -57,7 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 100,
                   child: Center(
                       child: Text(
-                    "Masuk",
+                    "Login",
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
                   )),
                 ),
@@ -72,6 +85,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
+                    errorText:
+                        _validateEmail ? "Email tidak boleh kosong" : null,
                   ),
                 ),
                 SizedBox(height: 20),
@@ -98,6 +113,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
+                    errorText: _validatePass
+                        ? "Password harus memiliki minimal 10 karakter"
+                        : null,
                   ),
                 ),
                 SizedBox(height: 5),
@@ -110,27 +128,20 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: Text("Lupa kata sandi"),
                       ),
                     ),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: Size(300, 50.0),
-                        maximumSize:
-                            Size(MediaQuery.of(context).size.width, 50),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                      ),
-                      onPressed: () {
-                        if (_emailController.text == '' ||
-                            _passwordController.text == '') {
-                          _showEmptyFieldErrorDialog();
+                    MyButton(
+                      text: "Login",
+                      onpressed: () async {
+                        if (await _login(
+                            _emailController, _passwordController)) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            loginSuccess(context),
+                          );
                         } else {
-                          _auth.login(
-                            _emailController.text,
-                            _passwordController.text,
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            loginFail(context),
                           );
                         }
                       },
-                      child: Text('Masuk'),
                     ),
                     Center(
                       child: Row(
@@ -152,13 +163,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                     builder: (context) => RegisterScreen(),
                                   ));
                             },
-                            child: Text("Daftar"),
+                            child: Text("Register"),
                           ),
                         ],
                       ),
                     ),
                     Divider(),
-                    Text('atau masuk dengan'),
+                    Text('atau Login dengan'),
                     SizedBox(
                       height: 10,
                     ),
@@ -206,4 +217,32 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
+}
+
+loginSuccess(BuildContext context) {
+  return SnackBar(
+    behavior: SnackBarBehavior.floating,
+    backgroundColor: Colors.green,
+    duration: Duration(seconds: 5),
+    content: Text('Login Berhasil!'),
+    action: SnackBarAction(
+      label: 'Tutup',
+      textColor: Colors.white,
+      onPressed: () => ScaffoldMessenger.of(context).removeCurrentSnackBar(),
+    ),
+  );
+}
+
+loginFail(BuildContext context) {
+  return SnackBar(
+    behavior: SnackBarBehavior.floating,
+    backgroundColor: Colors.red,
+    duration: Duration(seconds: 5),
+    content: Text('Akun Tidak Ditemukan!'),
+    action: SnackBarAction(
+      label: 'Tutup',
+      textColor: Colors.white,
+      onPressed: () => ScaffoldMessenger.of(context).removeCurrentSnackBar(),
+    ),
+  );
 }

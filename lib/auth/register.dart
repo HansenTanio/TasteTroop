@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:taste_troop/auth/auth.dart';
+import 'package:taste_troop/auth/components/button.dart';
 import 'package:taste_troop/auth/login.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -11,48 +12,46 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> {
   bool visibilityPass = false;
+  bool _validateEmail = false;
+  bool _validatePass = false;
+  bool _validateConfirmPass = false;
   final Authentication _auth = Authentication();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
-  void _showPasswordErrorDialog() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Password Invalid'),
-          content: Text('Password harus memiliki minimal 10 karakter.'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text('OK'),
-            ),
-          ],
+  Future<bool> _register(TextEditingController email,
+      TextEditingController pass, TextEditingController confirm) async {
+    setState(() {
+      _validateEmail = email.text.isEmpty;
+      if (pass.text.length < 10 || confirm.text.length < 10) {
+        _validatePass = true;
+      } else if (pass.text != confirm.text) {
+        _validatePass = false;
+        _validateConfirmPass = true;
+      } else {
+        _validatePass = false;
+        _validateConfirmPass = false;
+      }
+    });
+    if (_validateEmail == false &&
+        _validatePass == false &&
+        _validateConfirmPass == false) {
+      if (await _auth.register(
+          _emailController.text, _passwordController.text)) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => LoginScreen(),
+          ),
         );
-      },
-    );
-  }
-
-  void _showEmptyFieldErrorDialog() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Kolom Kosong'),
-          content: Text('Mohon isi kolom yang kosong'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
+        return true;
+      }
+      return false;
+    } else {
+      return false;
+    }
   }
 
   @override
@@ -72,11 +71,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  width: 100,
+                  width: 150,
                   height: 100,
                   child: Center(
                       child: Text(
-                    "Daftar",
+                    "Register",
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
                   )),
                 ),
@@ -92,6 +91,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
+                    errorText:
+                        _validateEmail ? "Email tidak boleh kosong" : null,
                   ),
                 ),
                 SizedBox(height: 15),
@@ -117,34 +118,60 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
+                    errorText: _validatePass
+                        ? "Password harus memiliki minimal 10 karakter"
+                        : _validateConfirmPass
+                            ? "Password Tidak Sama!"
+                            : null,
+                  ),
+                ),
+                SizedBox(height: 15),
+                TextField(
+                  obscureText: !visibilityPass,
+                  controller: _confirmPasswordController,
+                  decoration: InputDecoration(
+                    labelText: "Konfirmasi Kata Sandi",
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          visibilityPass = !visibilityPass;
+                        });
+                      },
+                      icon: visibilityPass
+                          ? Icon(Icons.visibility)
+                          : Icon(Icons.visibility_off),
+                    ),
+                    icon: Icon(
+                      Icons.settings,
+                      color: Theme.of(context).iconTheme.color,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    errorText: _validatePass
+                        ? "Password harus memiliki minimal 10 karakter"
+                        : _validateConfirmPass
+                            ? "Password Tidak Sama!"
+                            : null,
                   ),
                 ),
                 Column(
                   children: [
                     Padding(padding: EdgeInsets.only(top: 20)),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: Size(300, 50.0),
-                        maximumSize:
-                            Size(MediaQuery.of(context).size.width, 50),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                      ),
-                      onPressed: () {
-                        if (_emailController.text == '' ||
-                            _passwordController.text == '') {
-                          _showEmptyFieldErrorDialog();
-                        } else if (_passwordController.text.length < 10) {
-                          _showPasswordErrorDialog();
+                    MyButton(
+                      text: 'Register',
+                      onpressed: () async {
+                        if (await _register(_emailController,
+                            _passwordController, _confirmPasswordController)) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            registerSuccess(context),
+                          );
                         } else {
-                          _auth.register(
-                            _emailController.text,
-                            _passwordController.text,
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            registerFail(context),
                           );
                         }
                       },
-                      child: Text('Daftar'),
                     ),
                     SizedBox(height: 40),
                     Center(
@@ -167,7 +194,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     builder: (context) => LoginScreen(),
                                   ));
                             },
-                            child: Text("Masuk"),
+                            child: Text("Login"),
                           ),
                         ],
                       ),
@@ -178,7 +205,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 SizedBox(
                   height: 10,
                 ),
-                Text('atau daftar dengan'),
+                Text('atau register dengan'),
                 SizedBox(
                   height: 20,
                 ),
@@ -221,4 +248,32 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ),
     );
   }
+}
+
+registerSuccess(BuildContext context) {
+  return SnackBar(
+    behavior: SnackBarBehavior.floating,
+    backgroundColor: Colors.green,
+    duration: Duration(seconds: 5),
+    content: Text('Register Berhasil!'),
+    action: SnackBarAction(
+      label: 'Tutup',
+      textColor: Colors.white,
+      onPressed: () => ScaffoldMessenger.of(context).removeCurrentSnackBar(),
+    ),
+  );
+}
+
+registerFail(BuildContext context) {
+  return SnackBar(
+    behavior: SnackBarBehavior.floating,
+    backgroundColor: Colors.red,
+    duration: Duration(seconds: 5),
+    content: Text('Akun Sudah Terdaftar'),
+    action: SnackBarAction(
+      label: 'Tutup',
+      textColor: Colors.white,
+      onPressed: () => ScaffoldMessenger.of(context).removeCurrentSnackBar(),
+    ),
+  );
 }
