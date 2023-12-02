@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:taste_troop/auth/auth.dart';
 import 'package:taste_troop/auth/components/button.dart';
 import 'package:taste_troop/auth/register.dart';
-import 'package:taste_troop/home/navigation.dart';
+import 'package:taste_troop/screen/navigation.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -19,12 +20,23 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordFocusNode = FocusNode();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  late SharedPreferences prefs;
+  final String _keyUsername = "username";
+  final String _keyPassword = "password";
+
+  Future<void> _rememberMe(String? username, String? password) async {
+    prefs = await SharedPreferences.getInstance();
+    if (username != null && password != null) {
+      prefs.setString(_keyUsername, username);
+      prefs.setString(_keyPassword, password);
+    }
+  }
 
   Future<bool> _login(
       TextEditingController email, TextEditingController pass) async {
     setState(() {
       _validateEmail = email.text.isEmpty;
-      if (_passwordController.text.length < 10) {
+      if (pass.text.length < 10) {
         _validatePass = true;
       } else {
         _validatePass = false;
@@ -32,9 +44,10 @@ class _LoginScreenState extends State<LoginScreen> {
     });
     if (_validateEmail == false && _validatePass == false) {
       if (await _auth.login(
-        _emailController.text,
-        _passwordController.text,
+        email.text,
+        pass.text,
       )) {
+        await _rememberMe(email.text, pass.text);
         Navigator.push(
           context,
           MaterialPageRoute(

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:taste_troop/home/berlangganan.dart';
-import 'package:taste_troop/home/home.dart';
-import 'package:taste_troop/home/profile.dart';
-import 'package:taste_troop/home/referensi.dart';
+import 'package:taste_troop/screen/berlangganan.dart';
+import 'package:taste_troop/screen/home.dart';
+import 'package:taste_troop/screen/profile.dart';
+import 'package:taste_troop/screen/referensi.dart';
 
 class navigationScreen extends StatefulWidget {
   const navigationScreen({super.key});

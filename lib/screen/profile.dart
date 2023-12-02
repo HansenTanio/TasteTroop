@@ -1,9 +1,8 @@
-// import 'package:cateringapp/backend/data/models/auth.dart';
+import 'package:taste_troop/auth/auth.dart';
 import 'package:taste_troop/initial/splash.dart';
 import 'package:flutter/material.dart';
-// import 'SettingPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:taste_troop/main.dart';
+// import 'package:taste_troop/main.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -17,31 +16,33 @@ class _ProfilePageState extends State<ProfileScreen> {
   final String _keyUsername = "username";
   final String _keyPassword = "password";
   String? _usernameValue;
-  // final Authentication _auth = Authentication();
+  final Authentication _auth = Authentication();
 
-  // void _loadData() async {
-  //   prefs = await SharedPreferences.getInstance();
-  //   _usernameValue = prefs.getString(_keyUsername);
-  // }
+  void _loadData() async {
+    prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _usernameValue = prefs.getString(_keyUsername);
+    });
+  }
 
   @override
   void initState() {
     super.initState();
-    // _loadData();
+    _loadData();
   }
 
-  // Future<void> _logout() async {
-  //   prefs = await SharedPreferences.getInstance();
-  //   prefs.setString(_keyUsername, "");
-  //   prefs.setString(_keyPassword, "");
-  //   _auth.signOut();
-  //   Navigator.push(
-  //     context,
-  //     MaterialPageRoute(
-  //       builder: (context) => FirstPage(),
-  //     ),
-  //   );
-  // }
+  Future<void> _logout() async {
+    prefs = await SharedPreferences.getInstance();
+    prefs.setString(_keyUsername, "");
+    prefs.setString(_keyPassword, "");
+    _auth.signOut();
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SplashScreen(),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,20 +54,15 @@ class _ProfilePageState extends State<ProfileScreen> {
             backgroundImage: AssetImage('assets/logo/logo-darkmode.png'),
             radius: 50,
           ),
-          // Text(
-          //   '${_usernameValue.toString().replaceAll("@gmail.com", "")}',
-          //   style: TextStyle(fontWeight: FontWeight.bold),
-          // ),
-          // Text(_usernameValue.toString()),
           const SizedBox(
             height: 10,
           ),
           Text(
-            "Hansen Tanio",
+            '${_usernameValue.toString().replaceAll("@gmail.com", "")}',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
           ),
           Text(
-            "hansentanio33@gmail.com",
+            _usernameValue.toString(),
             style: TextStyle(fontSize: 15, color: Colors.grey),
           ),
           const SizedBox(

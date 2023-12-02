@@ -1,9 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:taste_troop/home/navigation.dart';
+// import 'package:taste_troop/home/navigation.dart';
 import 'package:taste_troop/initial/splash.dart';
 
-Future<void> main() async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(MyApp());
@@ -24,7 +24,7 @@ class _MyAppState extends State<MyApp> {
         primarySwatch: Colors.green,
       ),
       debugShowCheckedModeBanner: false,
-      home: navigationScreen(),
+      home: SplashScreen(),
     );
   }
 }

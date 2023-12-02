@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:taste_troop/home/models/referensi_model.dart';
+import 'package:taste_troop/screen/models/referensi_model.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 

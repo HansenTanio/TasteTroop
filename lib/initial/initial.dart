@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:taste_troop/auth/register.dart';
+import 'package:taste_troop/screen/navigation.dart';
 import 'package:taste_troop/initial/components/button.dart';
 import 'package:taste_troop/auth/login.dart';
 
@@ -10,6 +12,35 @@ class InitialScreen extends StatefulWidget {
 }
 
 class _InitialScreenState extends State<InitialScreen> {
+  late SharedPreferences prefs;
+  final String _keyUsername = "username";
+  final String _keyPassword = "password";
+  String? _usernameValue;
+  String? _passwordValue;
+
+  void _loadData() async {
+    prefs = await SharedPreferences.getInstance();
+    _passwordValue = prefs.getString(_keyPassword);
+    _usernameValue = prefs.getString(_keyUsername);
+    if (_usernameValue != null &&
+        _passwordValue != null &&
+        _usernameValue != '' &&
+        _passwordValue != '') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => navigationScreen(),
+        ),
+      );
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
