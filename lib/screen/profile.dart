@@ -2,7 +2,8 @@ import 'package:taste_troop/auth/auth.dart';
 import 'package:taste_troop/initial/splash.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-// import 'package:taste_troop/main.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -17,6 +18,7 @@ class _ProfilePageState extends State<ProfileScreen> {
   final String _keyPassword = "password";
   String? _usernameValue;
   final Authentication _auth = Authentication();
+  ImageProvider? gambar;
 
   void _loadData() async {
     prefs = await SharedPreferences.getInstance();
@@ -44,15 +46,99 @@ class _ProfilePageState extends State<ProfileScreen> {
     );
   }
 
+  void getImage() async {
+    if (await Permission.photos.status.isGranted) {
+      print("Yes");
+      // final pickedFile = await ImagePicker().pickImage(
+      //   source: ImageSource.gallery,
+      // );
+      // if (pickedFile != null) {
+      //   final bytes = await pickedFile.readAsBytes();
+      //   setState(() {
+      //     gambar = MemoryImage(bytes);
+      //   });
+      // }
+    } else {
+      var status = await Permission.storage.request();
+      print(status);
+      // if (status == PermissionStatus.granted) {
+      //   final pickedFile = await ImagePicker().pickImage(
+      //     source: ImageSource.gallery,
+      //   );
+      //   if (pickedFile != null) {
+      //     final bytes = await pickedFile.readAsBytes();
+      //     setState(() {
+      //       gambar = MemoryImage(bytes);
+      //     });
+      //   } else if (status == PermissionStatus.permanentlyDenied) {
+      //     openAppSettings();
+      //   }
+      // }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 20.0),
       child: Column(
         children: [
-          CircleAvatar(
-            backgroundImage: AssetImage('assets/logo/logo-darkmode.png'),
-            radius: 50,
+          Center(
+            child: Stack(
+              children: [
+                Container(
+                  width: 150,
+                  height: 150,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      width: 2,
+                      color: Colors.white,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        spreadRadius: 2,
+                        blurRadius: 10,
+                        color: Colors.black.withOpacity(0.1),
+                      ),
+                    ],
+                    shape: BoxShape.circle,
+                    // image: DecorationImage(
+                    //   fit: BoxFit.fitWidth,
+                    image: gambar != null
+                        ? DecorationImage(
+                            fit: BoxFit.cover,
+                            image: gambar!,
+                          )
+                        : DecorationImage(
+                            fit: BoxFit.fitWidth,
+                            image: AssetImage('assets/logo/user.jpg'),
+                          ),
+                    // ),
+                  ),
+                ),
+                Positioned(
+                  bottom: 0,
+                  right: 0,
+                  child: Container(
+                    height: 50,
+                    width: 50,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        width: 5,
+                        color: Colors.white,
+                      ),
+                      color: Colors.green,
+                    ),
+                    child: IconButton(
+                      icon: const Icon(Icons.camera_alt_rounded),
+                      color: Colors.white,
+                      onPressed: getImage,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
           const SizedBox(
             height: 10,
