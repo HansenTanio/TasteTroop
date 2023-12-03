@@ -30,8 +30,8 @@ class _CardMenuState extends State<CardMenu> {
                 topLeft: Radius.circular(10.0), // Radius sudut atas kiri
                 topRight: Radius.circular(10.0), // Radius sudut atas kanan
               ),
-              child: Image.asset(
-                'assets/images/Ayam_Rendang.png',
+              child: Image(
+                image: NetworkImage(widget.menu.gambar),
                 fit: BoxFit.cover,
               ),
             ),

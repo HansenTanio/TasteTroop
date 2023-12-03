@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:taste_troop/screen/components/cardMenu.dart';
 import 'package:taste_troop/screen/models/menu_model.dart';
 
-class Hari extends StatefulWidget {
+// ignore: must_be_immutable
+class Hari extends StatelessWidget {
   List<MenuModel> menuReguler = [];
   List<MenuModel> menuPremium = [];
   List<MenuModel> menuKeluarga = [];
@@ -14,15 +15,10 @@ class Hari extends StatefulWidget {
   });
 
   @override
-  State<Hari> createState() => _HariState();
-}
-
-class _HariState extends State<Hari> {
-  @override
   Widget build(BuildContext context) {
-    widget.menuReguler.shuffle();
-    widget.menuPremium.shuffle();
-    widget.menuKeluarga.shuffle();
+    menuReguler.shuffle();
+    menuPremium.shuffle();
+    menuKeluarga.shuffle();
     return SingleChildScrollView(
       child: Container(
         child: Column(
@@ -48,9 +44,9 @@ class _HariState extends State<Hari> {
                       ),
                       child: Row(
                         children: List.generate(
-                          widget.menuReguler.take(4).length,
+                          menuReguler.take(4).length,
                           (index) => CardMenu(
-                            menu: widget.menuReguler[index],
+                            menu: menuReguler[index],
                           ),
                         ),
                       ),
@@ -84,9 +80,9 @@ class _HariState extends State<Hari> {
                       ),
                       child: Row(
                         children: List.generate(
-                          widget.menuPremium.take(5).length,
+                          menuPremium.take(5).length,
                           (index) => CardMenu(
-                            menu: widget.menuPremium[index],
+                            menu: menuPremium[index],
                           ),
                         ),
                       ),
@@ -120,9 +116,9 @@ class _HariState extends State<Hari> {
                       ),
                       child: Row(
                         children: List.generate(
-                          widget.menuKeluarga.take(5).length,
+                          menuKeluarga.take(5).length,
                           (index) => CardMenu(
-                            menu: widget.menuKeluarga[index],
+                            menu: menuKeluarga[index],
                           ),
                         ),
                       ),
