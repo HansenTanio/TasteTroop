@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:taste_troop/auth/auth.dart';
 import 'package:taste_troop/initial/splash.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +19,8 @@ class _ProfilePageState extends State<ProfileScreen> {
   final String _keyPassword = "password";
   String? _usernameValue;
   final Authentication _auth = Authentication();
-  ImageProvider? gambar;
+  final ImagePicker _imagePicker = ImagePicker();
+  File? _pickedImage;
 
   void _loadData() async {
     prefs = await SharedPreferences.getInstance();
@@ -47,33 +49,17 @@ class _ProfilePageState extends State<ProfileScreen> {
   }
 
   void getImage() async {
-    if (await Permission.photos.status.isGranted) {
-      print("Yes");
-      // final pickedFile = await ImagePicker().pickImage(
-      //   source: ImageSource.gallery,
-      // );
-      // if (pickedFile != null) {
-      //   final bytes = await pickedFile.readAsBytes();
-      //   setState(() {
-      //     gambar = MemoryImage(bytes);
-      //   });
-      // }
+    var status = await Permission.photos.request();
+    if (status == PermissionStatus.granted) {
+      final pickedFile =
+          await _imagePicker.pickImage(source: ImageSource.gallery);
+      if (pickedFile != null) {
+        setState(() {
+          _pickedImage = File(pickedFile.path);
+        });
+      }
     } else {
-      var status = await Permission.storage.request();
-      print(status);
-      // if (status == PermissionStatus.granted) {
-      //   final pickedFile = await ImagePicker().pickImage(
-      //     source: ImageSource.gallery,
-      //   );
-      //   if (pickedFile != null) {
-      //     final bytes = await pickedFile.readAsBytes();
-      //     setState(() {
-      //       gambar = MemoryImage(bytes);
-      //     });
-      //   } else if (status == PermissionStatus.permanentlyDenied) {
-      //     openAppSettings();
-      //   }
-      // }
+      openAppSettings();
     }
   }
 
@@ -102,18 +88,21 @@ class _ProfilePageState extends State<ProfileScreen> {
                       ),
                     ],
                     shape: BoxShape.circle,
-                    // image: DecorationImage(
-                    //   fit: BoxFit.fitWidth,
-                    image: gambar != null
-                        ? DecorationImage(
+                  ),
+                  child: ClipOval(
+                    child: _pickedImage != null
+                        ? Image.file(
+                            _pickedImage!,
+                            width: 150,
+                            height: 150,
                             fit: BoxFit.cover,
-                            image: gambar!,
                           )
-                        : DecorationImage(
-                            fit: BoxFit.fitWidth,
-                            image: AssetImage('assets/logo/user.jpg'),
+                        : Image.asset(
+                            'assets/logo/user.jpg',
+                            width: 150,
+                            height: 150,
+                            fit: BoxFit.cover,
                           ),
-                    // ),
                   ),
                 ),
                 Positioned(
