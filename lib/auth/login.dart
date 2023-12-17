@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:taste_troop/auth/auth.dart';
-import 'package:taste_troop/auth/components/button.dart';
-import 'package:taste_troop/auth/register.dart';
-import 'package:taste_troop/screen/navigation.dart';
+import '/auth/auth.dart';
+import '/auth/components/button.dart';
+import '/auth/register.dart';
+import '/screen/navigation.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -48,7 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
         pass.text,
       )) {
         await _rememberMe(email.text, pass.text);
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => navigationScreen(),

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:taste_troop/auth/register.dart';
-import 'package:taste_troop/screen/navigation.dart';
-import 'package:taste_troop/initial/components/button.dart';
-import 'package:taste_troop/auth/login.dart';
+import '/auth/register.dart';
+import '/screen/navigation.dart';
+import '/initial/components/button.dart';
+import '/auth/login.dart';
 
 class InitialScreen extends StatefulWidget {
   const InitialScreen({super.key});

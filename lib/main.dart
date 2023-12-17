@@ -1,7 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-// import 'package:taste_troop/home/navigation.dart';
-import 'package:taste_troop/initial/splash.dart';
+import '/initial/splash.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

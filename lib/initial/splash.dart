@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'package:taste_troop/initial/initial.dart';
+import '/initial/initial.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -12,7 +11,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     Future.delayed(Duration(seconds: 1), () {
-      Navigator.push(context, MaterialPageRoute(
+      Navigator.pushReplacement(context, MaterialPageRoute(
         builder: (context) {
           return InitialScreen();
         },

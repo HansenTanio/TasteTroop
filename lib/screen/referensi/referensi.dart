@@ -1,7 +1,7 @@
 import 'dart:convert';
-import 'package:taste_troop/screen/models/referensi_model.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import '/screen/referensi/models/referensi_model.dart';
 
 class ReferensiScreen extends StatefulWidget {
   const ReferensiScreen({super.key});

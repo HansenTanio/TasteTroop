@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:taste_troop/auth/auth.dart';
-import 'package:taste_troop/auth/components/button.dart';
-import 'package:taste_troop/auth/login.dart';
+import '/auth/auth.dart';
+import '/auth/components/button.dart';
+import '/auth/login.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});

@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:taste_troop/screen/components/carousel.dart';
-import 'package:taste_troop/screen/components/hari.dart';
-import 'package:taste_troop/screen/models/menu_model.dart';
+import '/screen/home/components/carousel.dart';
+import '/screen/home/components/hari.dart';
+import '/screen/home/models/menu_model.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

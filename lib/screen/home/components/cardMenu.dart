@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:taste_troop/screen/models/menu_model.dart';
+import '/screen/home/models/menu_model.dart';
 
 class CardMenu extends StatefulWidget {
   final MenuModel menu;

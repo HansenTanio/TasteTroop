@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:taste_troop/screen/components/cardMenu.dart';
-import 'package:taste_troop/screen/models/menu_model.dart';
+import '/screen/home/components/cardMenu.dart';
+import '/screen/home/models/menu_model.dart';
 
 // ignore: must_be_immutable
 class Hari extends StatelessWidget {
@@ -29,11 +29,13 @@ class Hari extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    "Menu Langganan Regular : 400k",
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+                  Center(
+                    child: Text(
+                      "Menu Langganan Regular : 400k",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                   SingleChildScrollView(
@@ -65,11 +67,13 @@ class Hari extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    "Menu Langganan Premium : 600k",
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+                  Center(
+                    child: Text(
+                      "Menu Langganan Premium : 600k",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                   SingleChildScrollView(
@@ -101,11 +105,13 @@ class Hari extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    "Menu Langganan Regular : 1.2jt",
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+                  Center(
+                    child: Text(
+                      "Menu Langganan Regular : 1.2jt",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                   SingleChildScrollView(

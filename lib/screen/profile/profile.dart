@@ -1,10 +1,12 @@
 import 'dart:io';
-import 'package:taste_troop/auth/auth.dart';
-import 'package:taste_troop/initial/splash.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:taste_troop/screen/profile/setting/privasi.dart';
+import '/auth/auth.dart';
+import '/initial/splash.dart';
+import '/screen/profile/setting/syarat&ketentuan.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -17,15 +19,17 @@ class _ProfilePageState extends State<ProfileScreen> {
   late SharedPreferences prefs;
   final String _keyUsername = "username";
   final String _keyPassword = "password";
+  final String _keyImagePath = "imagePath";
   String? _usernameValue;
+  String? _pickedImagePath;
   final Authentication _auth = Authentication();
   final ImagePicker _imagePicker = ImagePicker();
-  File? _pickedImage;
 
   void _loadData() async {
     prefs = await SharedPreferences.getInstance();
     setState(() {
       _usernameValue = prefs.getString(_keyUsername);
+      _pickedImagePath = prefs.getString(_keyImagePath);
     });
   }
 
@@ -39,8 +43,8 @@ class _ProfilePageState extends State<ProfileScreen> {
     prefs = await SharedPreferences.getInstance();
     prefs.setString(_keyUsername, "");
     prefs.setString(_keyPassword, "");
-    _auth.signOut();
-    Navigator.push(
+    _auth.logOut();
+    Navigator.pushReplacement(
       context,
       MaterialPageRoute(
         builder: (context) => SplashScreen(),
@@ -55,7 +59,8 @@ class _ProfilePageState extends State<ProfileScreen> {
           await _imagePicker.pickImage(source: ImageSource.gallery);
       if (pickedFile != null) {
         setState(() {
-          _pickedImage = File(pickedFile.path);
+          _pickedImagePath = pickedFile.path;
+          prefs.setString(_keyImagePath, _pickedImagePath!);
         });
       }
     } else {
@@ -90,9 +95,9 @@ class _ProfilePageState extends State<ProfileScreen> {
                     shape: BoxShape.circle,
                   ),
                   child: ClipOval(
-                    child: _pickedImage != null
+                    child: _pickedImagePath != null
                         ? Image.file(
-                            _pickedImage!,
+                            File(_pickedImagePath!),
                             width: 150,
                             height: 150,
                             fit: BoxFit.cover,
@@ -154,7 +159,14 @@ class _ProfilePageState extends State<ProfileScreen> {
             ),
           ),
           ListTile(
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SyaratScreen(),
+                ),
+              );
+            },
             iconColor: Colors.black,
             leading: Icon(Icons.rule_outlined),
             trailing: Icon(Icons.keyboard_arrow_right_outlined),
@@ -164,7 +176,14 @@ class _ProfilePageState extends State<ProfileScreen> {
             ),
           ),
           ListTile(
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => PrivasiScreen(),
+                ),
+              );
+            },
             iconColor: Colors.black,
             leading: Icon(Icons.privacy_tip_outlined),
             trailing: Icon(Icons.keyboard_arrow_right_outlined),
@@ -174,17 +193,19 @@ class _ProfilePageState extends State<ProfileScreen> {
             ),
           ),
           ListTile(
-            onTap: () {},
+            onTap: () {
+              _showBottomDialog(context);
+            },
             iconColor: Colors.black,
-            leading: Icon(Icons.star_outline),
+            leading: Icon(Icons.chat_outlined),
             trailing: Icon(Icons.keyboard_arrow_right_outlined),
             title: const Text(
-              'Rating Aplikasi',
+              'Layanan Pengaduan Konsumen',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
           ListTile(
-            onTap: () {},
+            onTap: _logout,
             iconColor: Colors.black,
             leading: Icon(Icons.logout),
             trailing: Icon(Icons.keyboard_arrow_right_outlined),
@@ -197,4 +218,40 @@ class _ProfilePageState extends State<ProfileScreen> {
       ),
     );
   }
+}
+
+void _showBottomDialog(BuildContext context) {
+  showModalBottomSheet(
+    context: context,
+    builder: (BuildContext context) {
+      return Container(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Text(
+              'Layanan Pengaduan Konsumen',
+              style: TextStyle(
+                fontSize: 15.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 10.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset('assets/logo/logo.png', width: 50),
+                Image.asset('assets/logo/teks.png', width: 100),
+              ],
+            ),
+            Text(
+              'PT Taste Troop Indonesia\ne-mail: aaa@gmail.com\n Nomor Telepon: 081234567890',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 12.0),
+            ),
+          ],
+        ),
+      );
+    },
+  );
 }
