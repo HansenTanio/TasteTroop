@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:taste_troop/initial/components/button.dart';
-import 'package:taste_troop/login/login.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '/auth/register.dart';
+import '/screen/navigation.dart';
+import '/initial/components/button.dart';
+import '/auth/login.dart';
 
 class InitialScreen extends StatefulWidget {
   const InitialScreen({super.key});
@@ -9,6 +12,35 @@ class InitialScreen extends StatefulWidget {
 }
 
 class _InitialScreenState extends State<InitialScreen> {
+  late SharedPreferences prefs;
+  final String _keyUsername = "username";
+  final String _keyPassword = "password";
+  String? _usernameValue;
+  String? _passwordValue;
+
+  void _loadData() async {
+    prefs = await SharedPreferences.getInstance();
+    _passwordValue = prefs.getString(_keyPassword);
+    _usernameValue = prefs.getString(_keyUsername);
+    if (_usernameValue != null &&
+        _passwordValue != null &&
+        _usernameValue != '' &&
+        _passwordValue != '') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => navigationScreen(),
+        ),
+      );
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,7 +122,17 @@ class _InitialScreenState extends State<InitialScreen> {
                           );
                         },
                       ),
-                      MyButton(teks: "Daftar", fungsi: () {}),
+                      MyButton(
+                        teks: "Daftar",
+                        fungsi: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => RegisterScreen(),
+                            ),
+                          );
+                        },
+                      ),
                     ],
                   ),
                   SizedBox(

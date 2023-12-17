@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/gestures.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '/auth/auth.dart';
+import '/auth/components/button.dart';
+import '/auth/register.dart';
+import '/screen/navigation.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -9,11 +13,54 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  Authentication _auth = Authentication();
   bool visibilityPass = false;
-  final _usernameController = TextEditingController();
-  final _passwordController = TextEditingController();
+  bool _validateEmail = false;
+  bool _validatePass = false;
   final _passwordFocusNode = FocusNode();
-  final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  late SharedPreferences prefs;
+  final String _keyUsername = "username";
+  final String _keyPassword = "password";
+
+  Future<void> _rememberMe(String? username, String? password) async {
+    prefs = await SharedPreferences.getInstance();
+    if (username != null && password != null) {
+      prefs.setString(_keyUsername, username);
+      prefs.setString(_keyPassword, password);
+    }
+  }
+
+  Future<bool> _login(
+      TextEditingController email, TextEditingController pass) async {
+    setState(() {
+      _validateEmail = email.text.isEmpty;
+      if (pass.text.length < 10) {
+        _validatePass = true;
+      } else {
+        _validatePass = false;
+      }
+    });
+    if (_validateEmail == false && _validatePass == false) {
+      if (await _auth.login(
+        email.text,
+        pass.text,
+      )) {
+        await _rememberMe(email.text, pass.text);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => navigationScreen(),
+          ),
+        );
+        return true;
+      }
+      return false;
+    } else {
+      return false;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,10 +72,9 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
       body: Container(
         width: MediaQuery.of(context).size.width,
-        child: Container(
-          padding: EdgeInsets.all(20.0),
-          child: Form(
-            key: _formKey,
+        padding: EdgeInsets.symmetric(horizontal: 20.0),
+        child: Center(
+          child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -37,28 +83,24 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 100,
                   child: Center(
                       child: Text(
-                    "Masuk",
+                    "Login",
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
                   )),
                 ),
                 TextFormField(
-                  controller: _usernameController,
+                  controller: _emailController,
                   decoration: InputDecoration(
-                    labelText: 'Email/Nama Pengguna',
+                    labelText: 'Email',
                     icon: Icon(
                       Icons.email,
                       color: Theme.of(context).iconTheme.color,
                     ),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(20),
                     ),
+                    errorText:
+                        _validateEmail ? "Email tidak boleh kosong" : null,
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your email';
-                    }
-                    return null;
-                  },
                 ),
                 SizedBox(height: 20),
                 TextFormField(
@@ -82,76 +124,67 @@ class _LoginScreenState extends State<LoginScreen> {
                       color: Theme.of(context).iconTheme.color,
                     ),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(20),
                     ),
+                    errorText: _validatePass
+                        ? "Password harus memiliki minimal 10 karakter"
+                        : null,
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Mohon masukkan kata sandi';
-                    }
-                    return null;
-                  },
                 ),
                 SizedBox(height: 5),
                 Column(
                   children: [
                     Align(
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 35),
-                        child: TextButton(
-                            onPressed: () {}, child: Text("Lupa kata sandi")),
+                      alignment: Alignment.centerRight,
+                      child: TextButton(
+                        onPressed: () {},
+                        child: Text("Lupa kata sandi"),
                       ),
                     ),
-                    SizedBox(height: 20),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: Size(300, 50.0),
-                        maximumSize:
-                            Size(MediaQuery.of(context).size.width, 50),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                      ),
-                      onPressed: () {},
-                      child: Text('Masuk'),
+                    MyButton(
+                      text: "Login",
+                      onpressed: () async {
+                        if (await _login(
+                            _emailController, _passwordController)) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            loginSuccess(context),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            loginFail(context),
+                          );
+                        }
+                      },
                     ),
-                    SizedBox(height: 40),
-                    RichText(
-                      textAlign: TextAlign.center,
-                      text: TextSpan(
+                    Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          TextSpan(
-                            text: "Belum memiliki akun ? ",
+                          Text(
+                            "Belum memiliki akun ? ",
                             style: TextStyle(
                               color: Colors.grey,
                               fontSize: 16,
                               decoration: TextDecoration.none,
                             ),
                           ),
-                          TextSpan(
-                            text: 'Daftar',
-                            style: TextStyle(
-                              color:
-                                  Theme.of(context).textTheme.bodyText1!.color,
-                              fontSize: 16,
-                              decoration: TextDecoration.underline,
-                            ),
-                            recognizer: TapGestureRecognizer()..onTap = () {},
+                          TextButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => RegisterScreen(),
+                                  ));
+                            },
+                            child: Text("Register"),
                           ),
                         ],
                       ),
                     ),
-                    SizedBox(
-                      height: 30,
-                    ),
                     Divider(),
+                    Text('atau Login dengan'),
                     SizedBox(
                       height: 10,
-                    ),
-                    Text('atau masuk dengan'),
-                    SizedBox(
-                      height: 20,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -197,4 +230,32 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
+}
+
+loginSuccess(BuildContext context) {
+  return SnackBar(
+    behavior: SnackBarBehavior.floating,
+    backgroundColor: Colors.green,
+    duration: Duration(seconds: 5),
+    content: Text('Login Berhasil!'),
+    action: SnackBarAction(
+      label: 'Tutup',
+      textColor: Colors.white,
+      onPressed: () => ScaffoldMessenger.of(context).removeCurrentSnackBar(),
+    ),
+  );
+}
+
+loginFail(BuildContext context) {
+  return SnackBar(
+    behavior: SnackBarBehavior.floating,
+    backgroundColor: Colors.red,
+    duration: Duration(seconds: 5),
+    content: Text('Akun Tidak Ditemukan!'),
+    action: SnackBarAction(
+      label: 'Tutup',
+      textColor: Colors.white,
+      onPressed: () => ScaffoldMessenger.of(context).removeCurrentSnackBar(),
+    ),
+  );
 }
