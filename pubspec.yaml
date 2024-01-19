@@ -36,6 +36,7 @@ dependencies:
   firebase_storage: ^11.5.3
   flutter:
     sdk: flutter
+  google_mobile_ads: ^4.0.0
   http: ^1.1.0
   image_picker: ^1.0.4
   intl: ^0.18.1

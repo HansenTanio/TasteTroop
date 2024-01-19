@@ -13,7 +13,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Future.delayed(Duration(seconds: 1), () {
       Navigator.pushReplacement(context, MaterialPageRoute(
         builder: (context) {
-          return InitialScreen(); //initial screen
+          return InitialScreen();
         },
       ));
     });
@@ -28,9 +28,7 @@ class _SplashScreenState extends State<SplashScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 100.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset('assets/logo/logo.png'),
-            ],
+            children: [Image.asset('assets/logo/logo.png'), Text("tes")],
           ),
         ),
       ),

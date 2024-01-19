@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import '/screen/berlangganan/berlangganan.dart';
 import '/screen/home/home.dart';
 import '/screen/profile/profile.dart';
@@ -33,14 +32,6 @@ class _navigationScreenState extends State<navigationScreen> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            TextButton(
-              onPressed: () {
-                // Navigator.push(context, MaterialPageRoute(builder: (context) {
-                //   return DialogPilihAlamat2();
-                // }));
-              },
-              child: Text("Pilih Alamat"),
-            ),
             Align(
               alignment: Alignment.centerLeft,
               child: Row(
@@ -87,7 +78,7 @@ class _navigationScreenState extends State<navigationScreen> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.menu_book),
-            label: 'Tutorial',
+            label: 'Referensi',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person_sharp),

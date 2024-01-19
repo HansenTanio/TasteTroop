@@ -236,7 +236,7 @@ loginSuccess(BuildContext context) {
   return SnackBar(
     behavior: SnackBarBehavior.floating,
     backgroundColor: Colors.green,
-    duration: Duration(seconds: 5),
+    duration: Duration(seconds: 3),
     content: Text('Login Berhasil!'),
     action: SnackBarAction(
       label: 'Tutup',
@@ -250,7 +250,7 @@ loginFail(BuildContext context) {
   return SnackBar(
     behavior: SnackBarBehavior.floating,
     backgroundColor: Colors.red,
-    duration: Duration(seconds: 5),
+    duration: Duration(seconds: 3),
     content: Text('Akun Tidak Ditemukan!'),
     action: SnackBarAction(
       label: 'Tutup',

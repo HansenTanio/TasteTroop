@@ -41,17 +41,17 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        GambarCarousel(),
-        Row(
-          children: List.generate(7, (index) {
-            final tabDate = _selectedDate.add(Duration(days: index));
-            return buildTabButton(index, tabDate);
-          }),
-        ),
-        Expanded(
-          child: IndexedStack(
+    return SingleChildScrollView(
+      child: Column(
+        children: <Widget>[
+          GambarCarousel(),
+          Row(
+            children: List.generate(7, (index) {
+              final tabDate = _selectedDate.add(Duration(days: index));
+              return buildTabButton(index, tabDate);
+            }),
+          ),
+          IndexedStack(
             index: _selectedIndex,
             children: [
               Hari(
@@ -91,8 +91,8 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ],
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

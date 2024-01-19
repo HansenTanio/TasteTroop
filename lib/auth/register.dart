@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '/auth/auth.dart';
 import '/auth/components/button.dart';
@@ -21,8 +22,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _confirmPasswordController =
       TextEditingController();
 
-  Future<bool> _register(TextEditingController email,
-      TextEditingController pass, TextEditingController confirm) async {
+  Future<bool> _register(
+    TextEditingController email,
+    TextEditingController pass,
+    TextEditingController confirm,
+  ) async {
     setState(() {
       _validateEmail = email.text.isEmpty;
       if (pass.text.length < 10 || confirm.text.length < 10) {
@@ -40,6 +44,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         _validateConfirmPass == false) {
       if (await _auth.register(
           _emailController.text, _passwordController.text)) {
+        addUser();
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -52,6 +57,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
     } else {
       return false;
     }
+  }
+
+  void addUser() async {
+    FirebaseFirestore db = await FirebaseFirestore.instance;
+    await db.collection('user').add(
+      {"Email": _emailController.text, "Alamat": []},
+    );
   }
 
   @override

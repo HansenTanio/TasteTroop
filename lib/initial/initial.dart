@@ -26,7 +26,7 @@ class _InitialScreenState extends State<InitialScreen> {
         _passwordValue != null &&
         _usernameValue != '' &&
         _passwordValue != '') {
-      Navigator.push(
+      Navigator.pushReplacement(
         context,
         MaterialPageRoute(
           builder: (context) => navigationScreen(),

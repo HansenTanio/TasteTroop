@@ -7,24 +7,46 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:taste_troop/main.dart';
+import 'package:taste_troop/initial/initial.dart';
+import 'package:taste_troop/screen/berlangganan/berlangganan.dart';
+import 'package:taste_troop/screen/profile/profile.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:taste_troop/screen/profile/setting/alamat.dart';
+import 'package:taste_troop/screen/profile/setting/privasi.dart';
+import 'package:taste_troop/screen/profile/setting/syarat&ketentuan.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
-
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
-
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+  testWidgets('Initial Screen', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(
+      home: InitialScreen(),
+    ));
+    expect(find.widgetWithText(ElevatedButton, "Masuk"), findsOneWidget);
+    expect(find.widgetWithText(ElevatedButton, "Daftar"), findsOneWidget);
+  });
+  testWidgets('Berlangganan Screen', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(
+      home: BerlanggananScreen(),
+    ));
+    expect(find.text("Paket Reguler"), findsOneWidget);
+    expect(find.text("Paket Premium"), findsOneWidget);
+    expect(find.text("Paket Keluarga"), findsOneWidget);
+  });
+  testWidgets('Syarat & Ketentuan Screen', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(
+      home: SyaratScreen(),
+    ));
+    expect(find.text("Syarat & Ketentuan"), findsOneWidget);
+  });
+  testWidgets('Kebijakan Privasi Screen', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(
+      home: PrivasiScreen(),
+    ));
+    expect(find.text("Kebijakan Privasi"), findsOneWidget);
+  });
+  testWidgets('Alamat Tersimpan Screen', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(
+      home: AlamatScreen(label: [], alamat: []),
+    ));
+    expect(find.text("Alamat Tersimpan"), findsOneWidget);
   });
 }
