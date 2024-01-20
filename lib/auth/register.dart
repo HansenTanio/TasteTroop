@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '/auth/auth.dart';
 import '/auth/components/button.dart';
@@ -21,8 +22,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _confirmPasswordController =
       TextEditingController();
 
-  Future<bool> _register(TextEditingController email,
-      TextEditingController pass, TextEditingController confirm) async {
+  Future<bool> _register(
+    TextEditingController email,
+    TextEditingController pass,
+    TextEditingController confirm,
+  ) async {
     setState(() {
       _validateEmail = email.text.isEmpty;
       if (pass.text.length < 10 || confirm.text.length < 10) {
@@ -40,6 +44,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         _validateConfirmPass == false) {
       if (await _auth.register(
           _emailController.text, _passwordController.text)) {
+        addUser();
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -52,6 +57,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
     } else {
       return false;
     }
+  }
+
+  void addUser() async {
+    FirebaseFirestore db = await FirebaseFirestore.instance;
+    await db.collection('user').add(
+      {
+        "Email": _emailController.text,
+        "Alamat": [],
+        "Label": [],
+        "ProfileImage": ""
+      },
+    );
   }
 
   @override
@@ -80,7 +97,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   )),
                 ),
                 SizedBox(height: 15),
-                TextField(
+                TextFormField(
+                  key: Key("Email"),
                   controller: _emailController,
                   decoration: InputDecoration(
                     labelText: "Email",
@@ -96,7 +114,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
                 SizedBox(height: 15),
-                TextField(
+                TextFormField(
+                  key: Key("Password"),
                   obscureText: !visibilityPass,
                   controller: _passwordController,
                   decoration: InputDecoration(
@@ -126,7 +145,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
                 SizedBox(height: 15),
-                TextField(
+                TextFormField(
+                  key: Key("Confirm"),
                   obscureText: !visibilityPass,
                   controller: _confirmPasswordController,
                   decoration: InputDecoration(
@@ -173,7 +193,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         }
                       },
                     ),
-                    SizedBox(height: 40),
+                    SizedBox(height: 10),
                     Center(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -194,14 +214,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     builder: (context) => LoginScreen(),
                                   ));
                             },
-                            child: Text("Login"),
+                            child: Text(
+                              "Login",
+                              style: TextStyle(color: Colors.green),
+                            ),
                           ),
                         ],
                       ),
                     ),
                   ],
                 ),
-                Divider(),
+                Divider(
+                  color: Colors.grey,
+                ),
                 SizedBox(
                   height: 10,
                 ),

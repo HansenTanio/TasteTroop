@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:taste_troop/screen/profile/setting/privasi.dart';
+import 'package:taste_troop/screen/profile/setting/syarat&ketentuan.dart';
 import '/auth/register.dart';
 import '/screen/navigation.dart';
 import '/initial/components/button.dart';
@@ -26,7 +28,7 @@ class _InitialScreenState extends State<InitialScreen> {
         _passwordValue != null &&
         _usernameValue != '' &&
         _passwordValue != '') {
-      Navigator.push(
+      Navigator.pushReplacement(
         context,
         MaterialPageRoute(
           builder: (context) => navigationScreen(),
@@ -88,7 +90,7 @@ class _InitialScreenState extends State<InitialScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(
-                    height: 100,
+                    height: 80,
                   ),
                   Text(
                     "Selamat datang di TasteTroop!",
@@ -138,10 +140,46 @@ class _InitialScreenState extends State<InitialScreen> {
                   SizedBox(
                     height: 10,
                   ),
-                  Text(
-                    "Dengan login atau daftar, berarti kamu menyetujui Syarat Ketentuan dan Kebijakan Privasi",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(),
+                  Column(
+                    children: [
+                      Text(
+                        "Dengan login atau daftar, berarti kamu menyetujui",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SyaratScreen(),
+                                ),
+                              );
+                            },
+                            child: Text(
+                              "Syarat Ketentuan",
+                              style: TextStyle(color: Colors.green),
+                            ),
+                          ),
+                          Text("dan"),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => PrivasiScreen(),
+                                ),
+                              );
+                            },
+                            child: Text("Kebijakan Privasi",
+                                style: TextStyle(color: Colors.green)),
+                          ),
+                        ],
+                      )
+                    ],
                   )
                 ],
               ),

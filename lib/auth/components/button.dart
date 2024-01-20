@@ -8,7 +8,7 @@ class MyButton extends StatelessWidget {
     required this.onpressed,
     required this.text,
   });
-  
+
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
@@ -18,9 +18,13 @@ class MyButton extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.0),
         ),
+        backgroundColor: Colors.green,
       ),
       onPressed: onpressed,
-      child: Text(text),
+      child: Text(
+        text,
+        style: TextStyle(color: Colors.white),
+      ),
     );
   }
 }

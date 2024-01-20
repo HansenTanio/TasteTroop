@@ -88,6 +88,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   )),
                 ),
                 TextFormField(
+                  key: Key("Email"),
                   controller: _emailController,
                   decoration: InputDecoration(
                     labelText: 'Email',
@@ -104,6 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 SizedBox(height: 20),
                 TextFormField(
+                  key: const Key("Password"),
                   controller: _passwordController,
                   focusNode: _passwordFocusNode,
                   obscureText: !visibilityPass,
@@ -138,7 +140,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       alignment: Alignment.centerRight,
                       child: TextButton(
                         onPressed: () {},
-                        child: Text("Lupa kata sandi"),
+                        child: Text(
+                          "Lupa kata sandi",
+                          style: TextStyle(color: Colors.green),
+                        ),
                       ),
                     ),
                     MyButton(
@@ -176,12 +181,15 @@ class _LoginScreenState extends State<LoginScreen> {
                                     builder: (context) => RegisterScreen(),
                                   ));
                             },
-                            child: Text("Register"),
+                            child: Text(
+                              "Register",
+                              style: TextStyle(color: Colors.green),
+                            ),
                           ),
                         ],
                       ),
                     ),
-                    Divider(),
+                    Divider(color: Colors.grey),
                     Text('atau Login dengan'),
                     SizedBox(
                       height: 10,
@@ -236,7 +244,7 @@ loginSuccess(BuildContext context) {
   return SnackBar(
     behavior: SnackBarBehavior.floating,
     backgroundColor: Colors.green,
-    duration: Duration(seconds: 5),
+    duration: Duration(seconds: 3),
     content: Text('Login Berhasil!'),
     action: SnackBarAction(
       label: 'Tutup',
@@ -250,7 +258,7 @@ loginFail(BuildContext context) {
   return SnackBar(
     behavior: SnackBarBehavior.floating,
     backgroundColor: Colors.red,
-    duration: Duration(seconds: 5),
+    duration: Duration(seconds: 3),
     content: Text('Akun Tidak Ditemukan!'),
     action: SnackBarAction(
       label: 'Tutup',

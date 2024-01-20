@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import '/screen/home/components/carousel.dart';
 import '/screen/home/components/hari.dart';
@@ -19,6 +20,9 @@ class _HomeScreenState extends State<HomeScreen> {
   List<MenuModel> _menuKeluarga = [];
 
   void getData() async {
+    if (Firebase.apps.isEmpty) {
+      await Firebase.initializeApp();
+    }
     FirebaseFirestore db = await FirebaseFirestore.instance;
     var reguler = await db.collection('reguler').get();
     var premium = await db.collection('premium').get();
@@ -41,17 +45,17 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        GambarCarousel(),
-        Row(
-          children: List.generate(7, (index) {
-            final tabDate = _selectedDate.add(Duration(days: index));
-            return buildTabButton(index, tabDate);
-          }),
-        ),
-        Expanded(
-          child: IndexedStack(
+    return SingleChildScrollView(
+      child: Column(
+        children: <Widget>[
+          GambarCarousel(),
+          Row(
+            children: List.generate(7, (index) {
+              final tabDate = _selectedDate.add(Duration(days: index));
+              return buildTabButton(index, tabDate);
+            }),
+          ),
+          IndexedStack(
             index: _selectedIndex,
             children: [
               Hari(
@@ -91,8 +95,8 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ],
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

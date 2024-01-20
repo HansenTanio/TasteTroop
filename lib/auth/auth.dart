@@ -1,9 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 class Authentication {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
   Future<bool> login(String email, String password) async {
+    if (Firebase.apps.isEmpty) {
+      await Firebase.initializeApp();
+    }
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+
     try {
       await _auth.signInWithEmailAndPassword(
         email: email,
@@ -16,6 +20,11 @@ class Authentication {
   }
 
   Future<bool> register(String email, String password) async {
+    if (Firebase.apps.isEmpty) {
+      await Firebase.initializeApp();
+    }
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+
     try {
       await _auth.createUserWithEmailAndPassword(
         email: email,
@@ -28,6 +37,11 @@ class Authentication {
   }
 
   Future resetPassword(String email) async {
+    if (Firebase.apps.isEmpty) {
+      await Firebase.initializeApp();
+    }
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+
     try {
       return await _auth.sendPasswordResetEmail(email: email);
     } catch (e) {
@@ -36,6 +50,11 @@ class Authentication {
   }
 
   Future logOut() async {
+    if (Firebase.apps.isEmpty) {
+      await Firebase.initializeApp();
+    }
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+
     try {
       return await _auth.signOut();
     } catch (e) {

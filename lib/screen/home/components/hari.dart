@@ -107,7 +107,7 @@ class Hari extends StatelessWidget {
                 children: [
                   Center(
                     child: Text(
-                      "Menu Langganan Regular : 1.2jt",
+                      "Menu Langganan Keluarga : 1.2jt",
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
